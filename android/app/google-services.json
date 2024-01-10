@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "233612908115",
+    "project_id": "chatapptute-2df12",
+    "storage_bucket": "chatapptute-2df12.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:233612908115:android:9602323f5a5fc54837d8a6",
+        "android_client_info": {
+          "package_name": "com.example.chat"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJKweiPckyyQ6iSFSvkIy6V0fMy2V59eY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
