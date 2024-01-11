@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../components/my_botton.dart';
 import '../components/my_text_field.dart';
+import '../service/auth/auth_service.dart';
 
 class RegisterPage extends StatefulWidget {
   final void Function()? onTap;
 
-  const RegisterPage({super.key,required this.onTap});
+  const RegisterPage({super.key, required this.onTap});
 
   @override
   State<RegisterPage> createState() => _RegisterPageState();
@@ -16,8 +18,24 @@ class _RegisterPageState extends State<RegisterPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
-  void signUp(){
-    
+  void signUp() async {
+    print("fewfewqfewf"+ passwordController.text +" dsa" +confirmPasswordController.text);
+
+    if (passwordController.text != confirmPasswordController.text) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Passwords do not match!')));
+      return;
+    }
+
+    final authService = Provider.of<AuthService>(context, listen: false);
+
+    try {
+      await authService.signUpWithEmailandPassword(
+          emailController.text, passwordController.text);
+    } catch (e) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(e.toString())));
+    }
   }
 
   @override
@@ -28,8 +46,7 @@ class _RegisterPageState extends State<RegisterPage> {
         child: Center(
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 25.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+            child: ListView(
               children: [
                 const SizedBox(
                   height: 50,
@@ -83,7 +100,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   height: 50,
                 ),
                 // not a member
-                 Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Text('Aleady a member?'),

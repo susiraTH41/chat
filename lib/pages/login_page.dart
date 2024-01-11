@@ -1,5 +1,7 @@
 import 'package:chat/components/my_text_field.dart';
+import 'package:chat/service/auth/auth_service.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../components/my_botton.dart';
 
@@ -15,7 +17,15 @@ class _LoginPageState extends State<LoginPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
-  void signIn() {}
+  void signIn() async{
+    final authService = Provider.of<AuthService>(context,listen: false);
+
+    try{
+      await authService.signInWithEmailandPassword(emailController.text, passwordController.text);
+    }catch(e){
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +35,7 @@ class _LoginPageState extends State<LoginPage> {
         child: Center(
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 25.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+            child: ListView(
               children: [
                 const SizedBox(
                   height: 50,
