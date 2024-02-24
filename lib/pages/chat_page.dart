@@ -1,3 +1,4 @@
+import 'package:chat/components/chat_bubble.dart';
 import 'package:chat/components/my_text_field.dart';
 import 'package:chat/service/auth/chat_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -40,7 +41,9 @@ class _ChatPageState extends State<ChatPage> {
           Expanded(
             child: _buildMessageList(),
           ),
-          _buildMessageInput()
+          _buildMessageInput(),
+
+          const SizedBox(height: 25,)
         ],
       ),
     );
@@ -92,7 +95,11 @@ class _ChatPageState extends State<ChatPage> {
                   : MainAxisAlignment.start,
           children: [
             Text(data['senderEmail']),
-            Text(data['message']),
+            const SizedBox(height: 5,) ,
+            ChatBubble(message: data['message'] ,
+            colorBox: (data['senderId'] == _firebaseAuth.currentUser!.uid)
+        ? Colors.blue
+        : Colors.grey),
           ],
         ),
       ),
@@ -101,17 +108,20 @@ class _ChatPageState extends State<ChatPage> {
 
   //build message input
   Widget _buildMessageInput() {
-    return Row(
-      children: [
-        Expanded(
-          child: MyTextField(
-            controller: _messageController,
-            hintText: 'Enter message',
-            obscureText: false,
+    return Padding(
+      padding: const EdgeInsets.all(25.0),
+      child: Row(
+        children: [
+          Expanded(
+            child: MyTextField(
+              controller: _messageController,
+              hintText: 'Enter message',
+              obscureText: false,
+            ),
           ),
-        ),
-        IconButton(onPressed: sendMessage, icon: const Icon(Icons.arrow_upward))
-      ],
+          IconButton(onPressed: sendMessage, icon: const Icon(Icons.arrow_upward))
+        ],
+      ),
     );
   }
 }

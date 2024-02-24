@@ -19,8 +19,22 @@ class _HomePageState extends State<HomePage> {
     authService.signOut();
   }
 
+  int _selectedIndex = 1;
+
+  List<Widget> _pageWidget() => <Widget>[
+        _buildUserList131(),
+        _buildUserList(),
+      ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    final List<Widget> pageWidget = _pageWidget();
     return Scaffold(
       appBar: AppBar(
         title: Text('Home Page'),
@@ -31,56 +45,69 @@ class _HomePageState extends State<HomePage> {
           )
         ],
       ),
-      body: _buildUserList(),
+      body: pageWidget.elementAt(_selectedIndex),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.sensor_door_outlined),
+            label: 'Controls',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.list_alt),
+            label: 'Logs',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.blue,
+        unselectedItemColor: Colors.black87,
+        onTap: _onItemTapped,
+      ),
     );
   }
-  
-  Widget _buildUserList() {
 
+  Widget _buildUserList131() {
+    return SafeArea(child: Text('gdsgdsg'));
+  }
+
+  Widget _buildUserList() {
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance.collection('users').snapshots(),
       builder: (context, snapshot) {
-        if (snapshot.hasError){
+        if (snapshot.hasError) {
           return const Text('error');
         }
 
-        if(snapshot.connectionState == ConnectionState.waiting){
+        if (snapshot.connectionState == ConnectionState.waiting) {
           return const Text('loading...');
         }
 
         return ListView(
           children: snapshot.data!.docs
-          .map<Widget>((doc) => _buildUserListItem(doc))
-          .toList() ,
+              .map<Widget>((doc) => _buildUserListItem(doc))
+              .toList(),
         );
       },
     );
   }
-  
+
   Widget _buildUserListItem(DocumentSnapshot document) {
-    Map<String, dynamic> data = document.data()! as Map<String, dynamic> ;
-    if(_auth.currentUser!.email != data['email']){
+    Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
+    if (_auth.currentUser!.email != data['email']) {
       return ListTile(
         title: Text(data['email']),
-        onTap: (){
+        onTap: () {
           Navigator.push(
-            context, 
-            MaterialPageRoute(
-              builder: (context) => ChatPage(
-                receiverUserEmail: data['email'],
-                receiverUserID: data['uid'],
-              ),
-            )
-          
-          );
+              context,
+              MaterialPageRoute(
+                builder: (context) => ChatPage(
+                  receiverUserEmail: data['email'],
+                  receiverUserID: data['uid'],
+                ),
+              ));
         },
       );
-
     } else {
       return Container();
     }
   }
-
-  
 }
-
